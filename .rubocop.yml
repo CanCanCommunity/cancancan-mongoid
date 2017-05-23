@@ -1,0 +1,43 @@
+Metrics/LineLength:
+  Max: 120
+
+Style/Documentation:
+  Enabled: false
+
+Style/NonNilCheck:
+  IncludeSemanticChanges: true
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/*_spec.rb'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/cancancan/model_adapters/mongoid_adapter.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'lib/cancancan/model_adapters/mongoid_adapter.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'lib/cancancan/model_adapters/mongoid_adapter.rb'
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Performance/FixedSize:
+  Exclude:
+    - 'spec/cancancan/model_adapters/mongoid_adapter_spec.rb'
+
+AllCops:
+  TargetRubyVersion: 2.0
+  Exclude:
+    - 'gemfiles/vendor/bundle/**/*'
+    - 'Appraisals'

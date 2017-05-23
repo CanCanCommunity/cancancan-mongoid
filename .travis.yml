@@ -1,0 +1,14 @@
+language: ruby
+cache: bundler
+rvm:
+  - 2.0.0
+  - 2.1.0
+  - 2.2.0
+  - 2.2.2
+  - jruby-9.0.5.0
+gemfile:
+  - gemfiles/mongoid_2.x.gemfile
+  - gemfiles/mongoid_6.x.gemfile
+bundler_args: "--jobs=3 --retry=3"
+script:
+  - bundle exec rubocop && bundle exec rake

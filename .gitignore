@@ -1,0 +1,17 @@
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+.idea
+
+# Ignore generated code coverage information
+/spec/coverage/*
+/coverage/*
+
+# Ignore RSpec state
+/spec/examples.txt
