@@ -1,28 +1,5 @@
 require 'spec_helper'
 
-class MongoidCategory
-  include Mongoid::Document
-
-  references_many :mongoid_projects
-end
-
-class MongoidProject
-  include Mongoid::Document
-
-  referenced_in :mongoid_category
-  references_many :mongoid_sub_projects
-end
-
-class MongoidSubProject
-  include Mongoid::Document
-
-  referenced_in :mongoid_project
-end
-
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new('127.0.0.1', 27_017).db('cancan_mongoid_spec')
-end
-
 RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
   context 'Mongoid defined' do
     before(:each) do
@@ -30,7 +7,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
     end
 
     after(:each) do
-      Mongoid.master.collections.reject do |collection|
+      Mongoid.default_client.collections.reject do |collection|
         collection.name =~ /system/
       end.each(&:drop)
     end
@@ -67,7 +44,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       MongoidProject.create(title: 'Lord')
       MongoidProject.create(title: 'Dude')
 
-      expect(MongoidProject.accessible_by(@ability, :read).entries).to eq([])
+      expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([])
     end
 
     it 'returns the correct records based on the defined ability' do
@@ -76,7 +53,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       MongoidProject.create(title: 'Lord')
       MongoidProject.create(title: 'Dude')
 
-      expect(MongoidProject.accessible_by(@ability, :read).entries).to eq([sir])
+      expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([sir])
     end
 
     it 'returns the correct records when a mix of can and cannot rules in defined ability' do
@@ -87,7 +64,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       MongoidProject.create(title: 'Lord')
       MongoidProject.create(title: 'Dude')
 
-      expect(MongoidProject.accessible_by(@ability, :destroy).entries).to eq([sir])
+      expect(MongoidProject.accessible_by(@ability, :destroy).to_a).to eq([sir])
     end
 
     it 'is able to mix empty conditions and hashes' do
@@ -105,7 +82,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       lord = MongoidProject.create(title: 'Lord')
       dude = MongoidProject.create(title: 'Dude')
 
-      expect(MongoidProject.accessible_by(@ability, :read).entries).to eq([sir, lord, dude])
+      expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([sir, lord, dude])
     end
 
     it 'allows a scope for conditions' do
@@ -114,7 +91,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       MongoidProject.create(title: 'Lord')
       MongoidProject.create(title: 'Dude')
 
-      expect(MongoidProject.accessible_by(@ability, :read).entries).to eq([sir])
+      expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([sir])
     end
 
     describe 'Mongoid::Criteria where clause Symbol extensions using MongoDB expressions' do
@@ -122,7 +99,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
         obj = MongoidProject.create(title: 'Sir')
         @ability.can :read, MongoidProject, :title.in => %w[Sir Madam]
         expect(@ability.can?(:read, obj)).to eq(true)
-        expect(MongoidProject.accessible_by(@ability, :read)).to eq([obj])
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([obj])
 
         obj2 = MongoidProject.create(title: 'Lord')
         expect(@ability.can?(:read, obj2)).to be(false)
@@ -148,17 +125,17 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
         obj = MongoidProject.create(title: 'Sir')
         @ability.can :read, MongoidProject, :title.nin => %w[Lord Madam]
         expect(@ability.can?(:read, obj)).to eq(true)
-        expect(MongoidProject.accessible_by(@ability, :read)).to eq([obj])
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([obj])
 
         obj2 = MongoidProject.create(title: 'Lord')
         expect(@ability.can?(:read, obj2)).to be(false)
       end
 
-      it 'handles :field.size' do
+      it 'handles :field.count' do
         obj = MongoidProject.create(titles: %w[Palatin Margrave])
-        @ability.can :read, MongoidProject, :titles.size => 2
+        @ability.can :read, MongoidProject, titles: { :$size => 2 }
         expect(@ability.can?(:read, obj)).to eq(true)
-        expect(MongoidProject.accessible_by(@ability, :read)).to eq([obj])
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([obj])
 
         obj2 = MongoidProject.create(titles: %w[Palatin Margrave Marquis])
         expect(@ability.can?(:read, obj2)).to be(false)
@@ -168,7 +145,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
         obj = MongoidProject.create(titles: %w[Palatin Margrave])
         @ability.can :read, MongoidProject, :titles.exists => true
         expect(@ability.can?(:read, obj)).to eq(true)
-        expect(MongoidProject.accessible_by(@ability, :read)).to eq([obj])
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([obj])
 
         obj2 = MongoidProject.create
         expect(@ability.can?(:read, obj2)).to be(false)
@@ -178,7 +155,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
         obj = MongoidProject.create(age: 50)
         @ability.can :read, MongoidProject, :age.gt => 45
         expect(@ability.can?(:read, obj)).to eq(true)
-        expect(MongoidProject.accessible_by(@ability, :read)).to eq([obj])
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([obj])
 
         obj2 = MongoidProject.create(age: 40)
         expect(@ability.can?(:read, obj2)).to be(false)
@@ -190,7 +167,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
         expect(@ability.can?(:read, obj)).to eq(true)
 
         # accessible_by only returns saved records
-        expect(MongoidProject.accessible_by(@ability, :read).entries).to eq([])
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([])
 
         obj2 = MongoidProject.new(title: 'Lord')
         expect(@ability.can?(:read, obj2)).to be(false)
@@ -200,7 +177,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
     it 'calls where with matching ability conditions' do
       obj = MongoidProject.create(foo: { bar: 1 })
       @ability.can :read, MongoidProject, foo: { bar: 1 }
-      expect(MongoidProject.accessible_by(@ability, :read).entries.first).to eq(obj)
+      expect(MongoidProject.accessible_by(@ability, :read).to_a.first).to eq(obj)
     end
 
     it 'excludes from the result if set to cannot' do
@@ -208,7 +185,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       MongoidProject.create(bar: 2)
       @ability.can :read, MongoidProject
       @ability.cannot :read, MongoidProject, bar: 2
-      expect(MongoidProject.accessible_by(@ability, :read).entries).to eq([obj])
+      expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([obj])
     end
 
     it 'combines the rules' do
@@ -217,7 +194,7 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       MongoidProject.create(bar: 3)
       @ability.can :read, MongoidProject, bar: 1
       @ability.can :read, MongoidProject, bar: 2
-      expect(MongoidProject.accessible_by(@ability, :read).entries).to match_array([obj, obj2])
+      expect(MongoidProject.accessible_by(@ability, :read).to_a).to match_array([obj, obj2])
     end
 
     it 'does not allow to fetch records when ability with just block present' do
@@ -230,14 +207,14 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
     end
 
     it 'can handle nested queries for accessible_by' do
-      @ability.can :read, MongoidSubProject, mongoid_project: { mongoid_category: { name: 'Authorization' } }
-      cat1 = MongoidCategory.create name: 'Authentication'
-      cat2 = MongoidCategory.create name: 'Authorization'
+      @ability.can :read, MongoidSubProject, mongoid_project: { mongoid_category: { name: 'allowed' } }
+      cat1 = MongoidCategory.create name: 'notallowed'
       proj1 = cat1.mongoid_projects.create name: 'Proj1'
+      proj1.mongoid_sub_projects.create name: 'Sub1'
+      cat2 = MongoidCategory.create name: 'allowed'
       proj2 = cat2.mongoid_projects.create name: 'Proj2'
-      sub1 = proj1.mongoid_sub_projects.create name: 'Sub1'
-      proj2.mongoid_sub_projects.create name: 'Sub2'
-      expect(MongoidSubProject.accessible_by(@ability)).to match_array([sub1])
+      sub2 = proj2.mongoid_sub_projects.create name: 'Sub2'
+      expect(MongoidSubProject.accessible_by(@ability).to_a).to match_array([sub2])
     end
   end
 end

@@ -2,6 +2,8 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'cancancan/mongoid'
 Dir["#{__dir__}/support/*.rb"].each { |f| require f }
 
+require 'cancan/matchers'
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -27,4 +29,8 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+end
+
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each do |f|
+  require f
 end
