@@ -4,4 +4,3 @@ if Mongoid::VERSION >= '5.0'
 else
   Mongoid.load!('spec/support/mongoid-old.yml')
 end
-
