@@ -7,7 +7,13 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
     end
 
     after(:each) do
-      Mongoid.default_client.collections.reject do |collection|
+      default_client =
+        if Mongoid::VERSION >= '5.0'
+          Mongoid.default_client
+        else
+          Mongoid.default_session
+        end
+      default_client.collections.reject do |collection|
         collection.name =~ /system/
       end.each(&:drop)
     end

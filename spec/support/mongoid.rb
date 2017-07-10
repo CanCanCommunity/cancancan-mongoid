@@ -1,2 +1,7 @@
 ENV['MONGOID_ENV'] = 'test'
-Mongoid.load!('spec/support/mongoid.yml')
+if Mongoid::VERSION >= '5.0'
+  Mongoid.load!('spec/support/mongoid.yml')
+else
+  Mongoid.load!('spec/support/mongoid-old.yml')
+end
+
