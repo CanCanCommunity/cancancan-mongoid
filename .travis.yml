@@ -9,8 +9,9 @@ rvm:
   - jruby-9.0.5.0
   - jruby-9.1.8.0
 gemfile:
-  - gemfiles/mongoid_5.2.gemfile
-  - gemfiles/mongoid_6.0.gemfile
+  - gemfiles/mongoid_3.x.gemfile
+  - gemfiles/mongoid_4.x.gemfile
+  - gemfiles/mongoid_5.x.gemfile
   - gemfiles/mongoid_6.1.gemfile
   - gemfiles/mongoid_6.2.gemfile
 before_install:
