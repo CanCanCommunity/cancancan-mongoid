@@ -2,7 +2,7 @@
 
 **ATTENTION: Gem in development. Not working yet. Look at the build status to see which tests are failing and help us fixing them** 
 
-[![Build Status](https://travis-ci.org/CanCanCommunity/cancancan-mongoid.svg?branch=develop)](https://travis-ci.org/CanCanCommunity/cancancan-mongoid)
+[![Build Status](https://travis-ci.org/CanCanCommunity/cancancan-mongoid.svg?branch=master)](https://travis-ci.org/CanCanCommunity/cancancan-mongoid)
 
 [![Code Climate](https://codeclimate.com/github/CanCanCommunity/cancancan-mongoid/badges/gpa.svg)](https://codeclimate.com/github/CanCanCommunity/cancancan-mongoid) 
 
