@@ -1,0 +1,6 @@
+test:
+  sessions:
+    default:
+      database: cancan_mongoid_spec
+      hosts:
+        - localhost:27017
