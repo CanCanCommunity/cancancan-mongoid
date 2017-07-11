@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/CanCanCommunity/cancancan-mongoid.svg?branch=develop)](https://travis-ci.org/CanCanCommunity/cancancan-mongoid)
 
-[![Code Climate](https://codeclimate.com/github/CanCanCommunity/cancancan-mongoid/badges/gpa.svg)] (https://codeclimate.com/github/CanCanCommunity/cancancan-mongoid) 
+[![Code Climate](https://codeclimate.com/github/CanCanCommunity/cancancan-mongoid/badges/gpa.svg)](https://codeclimate.com/github/CanCanCommunity/cancancan-mongoid) 
 
 This is the adapter for the [CanCanCan](https://github.com/CanCanCommunity/cancancan) authorisation
 library to automatically generate SQL queries from ability rules.
