@@ -6,7 +6,6 @@ rvm:
   - 2.2.7
   - 2.3.4
   - 2.4.1
-  - jruby-9.0.5.0
   - jruby-9.1.8.0
 gemfile:
   - gemfiles/mongoid_3.x.gemfile
