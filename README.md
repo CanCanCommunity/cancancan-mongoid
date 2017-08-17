@@ -13,7 +13,7 @@ Adds support for Mongoid >= 3.0
 
 ## Ruby Versions Supported
 
-Ruby >= 2.0.0
+Ruby >= 2.2.0
 
 JRuby >= 9.1
 
