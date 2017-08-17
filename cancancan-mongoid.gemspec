@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/CanCanCommunity/cancancan-mongoid'
   spec.summary       = 'Mongoid database adapter for CanCanCan.'
   spec.description   = "Implements CanCanCan's rule-based record fetching using Mongoid."
-  spec.platform    = Gem::Platform::RUBY
+  spec.platform      = Gem::Platform::RUBY
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files lib init.rb cancancan-mongoid.gemspec`.split($INPUT_RECORD_SEPARATOR)
