@@ -22,8 +22,8 @@ GEM
     bson (4.2.2)
     bson (4.2.2-java)
     cancancan (2.0.0)
-    codeclimate-test-reporter (1.0.7)
-      simplecov
+    codeclimate-test-reporter (1.0.8)
+      simplecov (<= 0.13)
     concurrent-ruby (1.0.5)
     concurrent-ruby (1.0.5-java)
     coveralls (0.8.21)
@@ -101,4 +101,4 @@ DEPENDENCIES
   simplecov (~> 0.12)
 
 BUNDLED WITH
-   1.15.1
+   1.15.3
