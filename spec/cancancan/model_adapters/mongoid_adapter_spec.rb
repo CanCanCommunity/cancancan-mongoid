@@ -36,6 +36,12 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       expect(@ability).to be_able_to(:read, model)
     end
 
+    it 'compares properties on mongoid criterias with the conditions hash' do
+      model = MongoidProject.create
+      @ability.can :read, MongoidProject, id: model.id
+      expect(@ability).to be_able_to(:read, MongoidProject.where(id: model.id))
+    end
+
     it 'is able to read hashes when field is array' do
       one_to_three = MongoidProject.create(numbers: %w[one two three])
       two_to_five = MongoidProject.create(numbers: %w[two three four five])
