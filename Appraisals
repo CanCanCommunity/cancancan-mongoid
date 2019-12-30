@@ -16,3 +16,7 @@ end
 appraise "mongoid_7.x" do
   gem "mongoid", "~> 7"
 end
+appraise "cancancan_2.x" do
+  gem "cancancan", "~> 2.0"
+  gem "mongoid", "~> 6.2"
+end
