@@ -13,6 +13,7 @@ gemfile:
   - gemfiles/mongoid_5.x.gemfile
   - gemfiles/mongoid_6.1.gemfile
   - gemfiles/mongoid_6.2.gemfile
+  - gemfiles/mongoid_7.x.gemfile
 before_install:
   - gem install bundler
   - gem update bundler

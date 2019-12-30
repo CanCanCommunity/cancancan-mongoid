@@ -65,7 +65,9 @@ module CanCan
         Hash[
           conditions.map do |k, v|
             if (relation = model_relations[k])
-              relation_class_name = relation[:class_name].blank? ? k.to_s.classify : relation[:class_name]
+              relation_class_name =
+                (relation.respond_to?(:class_name) ? relation.class_name : relation[:class_name]).presence ||
+                k.to_s.classify
               v = simplify_relations(relation_class_name.constantize, v)
               relation_ids = relation_class_name.constantize.where(v).distinct(:_id)
               k = "#{k}_id"
