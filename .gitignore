@@ -1,12 +1,13 @@
-/.bundle/
 /.yardoc
 /Gemfile.lock
+/gemfiles/*.lock
 /_yardoc/
 /coverage/
 /doc/
 /pkg/
 /spec/reports/
 /tmp/
+.bundle/
 .idea
 
 # Ignore generated code coverage information
