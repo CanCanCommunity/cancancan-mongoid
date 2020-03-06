@@ -1,7 +1,6 @@
-## master
+## 1.0.0
 
-### bug fixes
-
+ - Support Mongoid 7 and CanCanCan 3.x [@mshibuya](https://github.com/mshibuya)
  - Allow querying nested unloaded associations using a database query.
    [@lowjoel](https://github.com/lowjoel)
 

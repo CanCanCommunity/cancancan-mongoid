@@ -35,4 +35,5 @@ bundle install
 appraisal install
 ```
 
-You can then run all appraisal files (like CI does), with `appraisal rake` or just run a specific set `appraisal mongoid_6.1 rake`.
+You can then run all appraisal files (like CI does), with `bundle exec appraisal rake` 
+or just run a specific set `bundle exec appraisal mongoid_6.1 rake`.
