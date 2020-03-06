@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files lib init.rb cancancan-mongoid.gemspec`.split($INPUT_RECORD_SEPARATOR)
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'cancancan', '~> 2.0'
+  spec.add_dependency 'cancancan', ['>= 2.0', '< 4']
 
-  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'bundler', '>= 1.3'
   spec.add_development_dependency 'rake', '~> 10.1'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'rubocop', '~> 0.48.1'

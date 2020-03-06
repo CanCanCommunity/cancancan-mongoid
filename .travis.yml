@@ -6,16 +6,15 @@ rvm:
   - 2.2.7
   - 2.3.4
   - 2.4.1
-  - jruby-9.1.8.0
+  - jruby-9.2.7.0
 gemfile:
+  - gemfiles/cancancan_2.x.gemfile
   - gemfiles/mongoid_3.x.gemfile
   - gemfiles/mongoid_4.x.gemfile
   - gemfiles/mongoid_5.x.gemfile
   - gemfiles/mongoid_6.1.gemfile
   - gemfiles/mongoid_6.2.gemfile
-before_install:
-  - gem install bundler
-  - gem update bundler
+  - gemfiles/mongoid_7.x.gemfile
 bundler_args: "--jobs=3 --retry=3"
 script:
   - bundle exec rubocop && bundle exec rake
