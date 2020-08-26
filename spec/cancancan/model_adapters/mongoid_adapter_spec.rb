@@ -51,13 +51,24 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([])
     end
 
-    it 'returns the correct records based on the defined ability' do
-      @ability.can :read, MongoidProject, title: 'Sir'
-      sir = MongoidProject.create(title: 'Sir')
-      MongoidProject.create(title: 'Lord')
-      MongoidProject.create(title: 'Dude')
+    context 'when records based on the defined ability' do
+      let!(:sir) { MongoidProject.create(title: 'Sir') }
 
-      expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([sir])
+      before do
+        @ability.can :read, MongoidProject, title: 'Sir'
+        MongoidProject.create(title: 'Lord')
+        MongoidProject.create(title: 'Dude')
+      end
+
+      it 'returns the correct records' do
+        expect(MongoidProject.accessible_by(@ability, :read).to_a).to eq([sir])
+      end
+
+      context 'when model has scope' do
+        it 'returns empty array' do
+          expect(MongoidProject.where(title: 'Lord').accessible_by(@ability, :read).to_a).to eq([])
+        end
+      end
     end
 
     it 'returns the correct records when a mix of can and cannot rules in defined ability' do

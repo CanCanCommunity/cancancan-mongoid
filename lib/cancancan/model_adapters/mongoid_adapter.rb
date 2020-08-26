@@ -42,15 +42,21 @@ module CanCan
       def database_records_from_multiple_rules
         rules = @rules.reject { |rule| rule.conditions.empty? && rule.base_behavior }
         process_can_rules = @rules.count == rules.count
+        any_conditions = []
 
-        rules.inject(@model_class.all) do |records, rule|
-          if process_can_rules && rule.base_behavior
-            records.or simplify_relations(@model_class, rule.conditions)
-          elsif !rule.base_behavior
-            records.excludes simplify_relations(@model_class, rule.conditions)
-          else
+        scope = rules.inject(@model_class.all) do |records, rule|
+          if rule.base_behavior
+            any_conditions << simplify_relations(@model_class, rule.conditions) if process_can_rules
             records
+          else
+            records.excludes(simplify_relations(@model_class, rule.conditions))
           end
+        end
+
+        if any_conditions.any?
+          scope.any_of(*any_conditions)
+        else
+          scope
         end
       end
 
