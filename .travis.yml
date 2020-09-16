@@ -3,18 +3,53 @@ cache: bundler
 services:
   - mongodb
 rvm:
-  - 2.2.7
-  - 2.3.4
-  - 2.4.1
-  - jruby-9.2.7.0
+  - 2.3.5
+  - 2.4.2
+  - 2.5.1
+  - 2.6.3
+  - 2.7.0
+  - ruby-head
+  - jruby-9.1.17.0
+  - jruby-9.2.11.1
+  - jruby-head
 gemfile:
-  - gemfiles/cancancan_2.x.gemfile
-  - gemfiles/mongoid_3.x.gemfile
-  - gemfiles/mongoid_4.x.gemfile
-  - gemfiles/mongoid_5.x.gemfile
+  - gemfiles/cancancan_2.gemfile
+  - gemfiles/mongoid_3.gemfile
+  - gemfiles/mongoid_4.gemfile
+  - gemfiles/mongoid_5.gemfile
   - gemfiles/mongoid_6.1.gemfile
   - gemfiles/mongoid_6.2.gemfile
-  - gemfiles/mongoid_7.x.gemfile
+  - gemfiles/mongoid_7.0.gemfile
+  - gemfiles/mongoid_7.1.gemfile
+env:
+  - DB=sqlite
+  - DB=postgres
 bundler_args: "--jobs=3 --retry=3"
+
+matrix:
+  fast_finish: true
+  exclude:
+    - rvm: 2.7.0
+      gemfile: gemfiles/mongoid_3.gemfile
+    - rvm: 2.7.0
+      gemfile: gemfiles/mongoid_4.gemfile
+    - rvm: 2.7.0
+      gemfile: gemfiles/mongoid_5.gemfile
+    - rvm: ruby-head
+      gemfile: gemfiles/mongoid_3.gemfile
+    - rvm: ruby-head
+      gemfile: gemfiles/mongoid_4.gemfile
+    - rvm: ruby-head
+      gemfile: gemfiles/mongoid_5.gemfile
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
+
+notifications:
+  email:
+    recipients:
+      - alessandro.rodi@renuo.ch
+    on_success: change
+    on_failure: change
 script:
   - bundle exec rubocop && bundle exec rake
