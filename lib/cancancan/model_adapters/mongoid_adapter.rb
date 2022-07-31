@@ -40,27 +40,32 @@ module CanCan
       end
 
       def database_records_from_multiple_rules
-        rules = @rules.reject { |rule| rule.conditions.empty? && rule.base_behavior }
-        process_can_rules = @rules.count == rules.count
-        any_conditions = []
+        can_conditions, cannot_conditions = extract_conditions_from_rules
 
-        scope = rules.inject(@model_class.all) do |records, rule|
-          if rule.base_behavior
-            any_conditions << simplify_relations(@model_class, rule.conditions) if process_can_rules
-            records
-          else
-            records.excludes(simplify_relations(@model_class, rule.conditions))
-          end
-        end
-
-        if any_conditions.any?
-          scope.any_of(*any_conditions)
-        else
-          scope
-        end
+        scope = @model_class.all
+        scope = scope.where('$or' => can_conditions) if can_conditions.any?
+        scope = scope.where('$nor' => cannot_conditions) if cannot_conditions.any?
+        scope
       end
 
       private
+
+      def extract_conditions_from_rules
+        rules = @rules.reject {|rule| rule.conditions.empty? && rule.base_behavior }
+        process_can_rules = @rules.count == rules.count
+        can_conditions = []
+        cannot_conditions = []
+
+        rules.each do |rule|
+          if rule.base_behavior
+            can_conditions << simplify_relations(@model_class, rule.conditions) if process_can_rules
+          else
+            cannot_conditions << simplify_relations(@model_class, rule.conditions)
+          end
+        end
+
+        [can_conditions, cannot_conditions]
+      end
 
       # Look for criteria on relations and replace with simple id queries
       # eg.

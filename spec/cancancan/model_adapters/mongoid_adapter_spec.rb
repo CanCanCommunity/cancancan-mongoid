@@ -72,8 +72,8 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
     end
 
     it 'returns the correct records when a mix of can and cannot rules in defined ability' do
-      @ability.can :manage, MongoidProject, title: 'Sir'
-      @ability.cannot :destroy, MongoidProject
+      @ability.can :manage, MongoidProject
+      @ability.cannot :destroy, MongoidProject, title: { '$in' => %w[Lord Dude] }
 
       sir = MongoidProject.create(title: 'Sir')
       MongoidProject.create(title: 'Lord')
