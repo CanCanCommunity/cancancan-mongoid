@@ -1,29 +1,41 @@
 module CanCan
   module ModelAdapters
     class MongoidAdapter < AbstractAdapter
-      def self.for_class?(model_class)
-        model_class <= Mongoid::Document
-      end
 
-      def self.override_conditions_hash_matching?(subject, conditions)
-        conditions.any? do |k, _v|
-          key_is_not_symbol = -> { !k.is_a?(Symbol) }
-          subject_value_is_array = lambda do
-            subject.respond_to?(k) && subject.send(k).is_a?(Array)
-          end
+      class << self
 
-          key_is_not_symbol.call || subject_value_is_array.call
+        def for_class?(model_class)
+          model_class <= Mongoid::Document
         end
-      end
 
-      def self.matches_conditions_hash?(subject, conditions)
-        # To avoid hitting the db, retrieve the raw Mongo selector from
-        # the Mongoid Criteria and use Mongoid::Matchers#matches?
-        q = subject.class.where(conditions).selector
-        if subject.respond_to?(:_matches?)
-          subject._matches?(q)
-        else
-          subject.matches?(q)
+        def override_conditions_hash_matching?(subject, conditions)
+          conditions.any? do |k, v|
+            hash_override?(subject, k, v)
+          end
+        end
+
+        def matches_conditions_hash?(subject, conditions)
+          # To avoid hitting the db, retrieve the raw Mongo selector from
+          # the Mongoid Criteria and use Mongoid::Matchers#matches?
+          q = subject.class.where(conditions).selector
+          if subject.respond_to?(:_matches?)
+            subject._matches?(q)
+          else
+            subject.matches?(q)
+          end
+        end
+
+        private
+
+        def hash_override?(subject, key, value)
+          return true unless key.is_a?(Symbol)
+
+          return true if value.is_a?(Hash) && value.keys.any? { |k| k.to_s.start_with?('$') }
+
+          subject_value = subject.respond_to?(key) && subject.send(key)
+          return true if subject_value.is_a?(Array)
+
+          false
         end
       end
 
