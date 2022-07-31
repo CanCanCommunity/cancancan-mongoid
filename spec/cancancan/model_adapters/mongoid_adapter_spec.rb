@@ -43,6 +43,17 @@ RSpec.describe CanCan::ModelAdapters::MongoidAdapter do
       expect(@ability).not_to be_able_to(:foo, two_to_five)
     end
 
+    it 'is able to use nested operators in abilities' do
+      sir = MongoidProject.create(title: 'Sir')
+      lord = MongoidProject.create(title: 'Lord')
+      dude = MongoidProject.create(title: 'Dude')
+
+      @ability.can :foo, MongoidProject, title: { '$in' => %w[Sir Lord] }
+      expect(@ability).to be_able_to(:foo, sir)
+      expect(@ability).to be_able_to(:foo, lord)
+      expect(@ability).not_to be_able_to(:foo, dude)
+    end
+
     it 'returns [] when no ability is defined so no records are found' do
       MongoidProject.create(title: 'Sir')
       MongoidProject.create(title: 'Lord')
